@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        .dashboard { max-width: 1200px; margin: 0 auto; }
+        .header { background: #2563eb; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .metric-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .metric-value { font-size: 2em; font-weight: bold; color: #2563eb; }
+        .metric-label { color: #666; margin-top: 5px; }
+        .back-link { color: white; text-decoration: none; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <a href="/" class="back-link">← Back to Upload</a>
+            <h1>Invoice Processing Analytics</h1>
+            <p>Real-time insights from AI-powered invoice processing</p>
+        </div>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-value">{{ total_invoices or 0 }}</div>
+                <div class="metric-label">Total Invoices Processed</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">${{ "%.2f"|format(total_amount or 0) }}</div>
+                <div class="metric-label">Total Value Processed</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">{{ "%.1f"|format((avg_confidence or 0) * 100) }}%</div>
+                <div class="metric-label">Average Confidence Score</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">{{ "%.1f"|format(time_saved_hours or 0) }}</div>
+                <div class="metric-label">Hours Saved</div>
+            </div>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h3>Recent Invoices</h3>
+            {% if recent_invoices %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Vendor</th>
+                        <th>Amount</th>
+                        <th>Confidence</th>
+                        <th>Upload Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for invoice in recent_invoices %}
+                    <tr>
+                        <td>{{ invoice.filename or 'N/A' }}</td>
+                        <td>{{ invoice.vendor_name or 'Unknown' }}</td>
+                        <td>${{ "%.2f"|format(invoice.total_amount or 0) }}</td>
+                        <td>{{ "%.1f"|format((invoice.confidence_score or 0) * 100) }}%</td>
+                        <td>
+                            {% if invoice.upload_timestamp %}
+                                {{ invoice.upload_timestamp.strftime('%Y-%m-%d %H:%M') }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No invoices processed yet. <a href="/">Upload your first invoice</a></p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

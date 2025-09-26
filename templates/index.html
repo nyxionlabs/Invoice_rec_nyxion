@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice Processing System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Invoice Processing with Azure Form Recognizer</h1>
+
+        <div class="upload-section">
+            <h2>Upload Invoice</h2>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <input type="file" id="fileInput" name="file" accept=".pdf,.png,.jpg,.jpeg" required>
+                <button type="submit">Process Invoice</button>
+            </form>
+            <div id="result"></div>
+        </div>
+
+        <div class="actions">
+            <a href="/dashboard" class="btn">View Dashboard</a>
+            <a href="/api/data" class="btn">API Data</a>
+        </div>
+
+        <div class="recent-invoices">
+            <h2>Recent Invoices</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>Vendor</th>
+                        <th>Amount</th>
+                        <th>Confidence</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for invoice in invoices %}
+                    <tr>
+                        <td>{{ invoice.filename }}</td>
+                        <td>{{ invoice.vendor_name or 'N/A' }}</td>
+                        <td>${{ "%.2f"|format(invoice.total_amount or 0) }}</td>
+                        <td>{{ "%.1f"|format((invoice.confidence_score or 0) * 100) }}%</td>
+                        <td>{{ invoice.upload_timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
