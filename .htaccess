@@ -1,0 +1,4 @@
+PassengerEnabled on
+PassengerAppRoot /home5/nyxionla/invoice-app
+# If your host requires it, set PassengerPython to your venv python path
+# PassengerPython /home5/nyxionla/virtualenv/invoice-app/3.11/bin/python

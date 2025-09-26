@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AI Demo</title>
+  <style>body{font-family:system-ui;margin:40px}</style>
+</head>
+<body>
+  <h1>AI Demo</h1>
+  <p><b>Total invoices:</b> {{ total_invoices }}</p>
+  <p><b>Avg confidence (%):</b> {{ '%.1f'|format(avg_confidence or 0) }}</p>
+  <p><b>Avg processing time (s):</b> {{ '%.1f'|format(avg_time or 0) }}</p>
+  <p>Upload via the main page to try the processor.</p>
+</body>
+</html>
