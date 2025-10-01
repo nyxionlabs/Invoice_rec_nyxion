@@ -1,0 +1,25 @@
+FROM python:3.11-slim
+
+# Avoid permission issues with pip cache and add build deps if needed
+ENV PIP_NO_CACHE_DIR=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# System deps you may need (uncomment if your project needs them)
+# RUN apt-get update && apt-get install -y build-essential libgl1 && rm -rf /var/lib/apt/lists/*
+
+# Install Python deps
+COPY requirements.txt /app/
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Copy app
+COPY . /app
+
+# If you have shell scripts, make sure they’re executable
+# RUN chmod +x scripts/*.sh
+
+# Expose & run (adjust module/app name and port)
+EXPOSE 8000
+CMD ["bash","-lc","uvicorn main:app --host 0.0.0.0 --port 8000"]
