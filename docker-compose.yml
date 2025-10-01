@@ -1,0 +1,9 @@
+services:
+  app:
+    build: .
+    image: invoice-rec:latest
+    container_name: invoice-rec
+    env_file: .env
+    ports:
+      - "80:8000"     # serve on http://<vm-ip> (or your subdomain)
+    restart: unless-stopped
